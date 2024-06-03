@@ -1,28 +1,29 @@
 package com.example.api.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Customer {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(nullable = false)
-	@NotEmpty
+	@NotBlank(message = "Name cannot be blank")
 	private String name;
 
 	@Column(nullable = false)
-	@NotEmpty
+	@Email(message = "Email should be valid")
 	@Email
 	private String email;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
+	private Set<Address> addresses = new HashSet<>();
 
 	public Long getId() {
 		return id;
@@ -47,5 +48,6 @@ public class Customer {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 
 }
